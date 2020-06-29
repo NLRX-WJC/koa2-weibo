@@ -6,12 +6,17 @@ const onerror = require("koa-onerror");
 const bodyparser = require("koa-bodyparser");
 const logger = require("koa-logger");
 const path = require("path");
+const session = require("koa-generic-session");
+const redisStore = require("koa-redis");
+const { REDIS_CONF } = require("./conf/db");
 
 const index = require("./routes/index");
 const users = require("./routes/users");
 
 // error handler
 onerror(app);
+
+app.keys = ["nlrx"];
 
 // middlewares
 app
@@ -24,6 +29,20 @@ app
       options: { settings: { views: path.join(__dirname, "views") } },
       map: { ejs: "ejs" },
       extension: "ejs",
+    })
+  )
+  .use(
+    session({
+      key: "weibo:sid",
+      prefix: "weibo:sess:",
+      cookie: {
+        path: "/",
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      },
+      store: redisStore({
+        all: `${REDIS_CONF.host}:${REDIS_CONF.port}`,
+      }),
     })
   );
 
