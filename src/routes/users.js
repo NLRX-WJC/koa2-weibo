@@ -7,6 +7,7 @@ router.get('/', function (ctx, next) {
 })
 
 router.get('/bar', function (ctx, next) {
+  throw Error()
   ctx.body = 'this is a users/bar response'
 })
 
