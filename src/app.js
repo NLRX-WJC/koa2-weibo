@@ -8,6 +8,7 @@ const logger = require("koa-logger");
 const path = require("path");
 const session = require("koa-generic-session");
 const redisStore = require("koa-redis");
+
 const { REDIS_CONF } = require("./conf/db");
 const { isProd } = require("./utils/env");
 
@@ -39,6 +40,7 @@ app
       extension: "ejs",
     })
   )
+  // session 配置
   .use(
     session({
       key: "weibo:sid",
